@@ -229,7 +229,10 @@ form.totalScore.value = totalScore;
 form.intentScore.value = intentScore;
 form.food.value = food;
 form.intention.value = intention;
-form.answers.value = JSON.stringify(answersLog);
+form.answers_json.value = JSON.stringify(answersLog);
+form.answers_readable.value = answersLog
+  .map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`)
+  .join('\n');
 
 fetch('/', {
   method: 'POST',
