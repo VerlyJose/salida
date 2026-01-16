@@ -1,0 +1,174 @@
+:root {
+  --verde-profundo: #2d6a4f;
+  --verde-magico: #40916c;
+  --menta-suave: #d8f3dc;
+  --dorado-hada: #ffef96;
+  --rosa-magico: #ff9aa2;
+  --blanco-cristal: rgba(255, 255, 255, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at center, #1b4332, #081c15);
+  color: var(--menta-suave);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+/* --- Efectos de Polvo de Hadas --- */
+.fairy-dust {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #fff, var(--dorado-hada));
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 0 12px 2px rgba(255, 239, 150, 0.9);
+  animation: fly 2.5s ease-out forwards;
+}
+
+@keyframes fly {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--x), var(--y)) scale(0) rotate(360deg); opacity: 0; }
+}
+
+/* --- Pantalla de Carga Mágica --- */
+#loader {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 67, 50, 0.9);
+  -webkit-backdrop-filter: (10px);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var(--dorado-hada);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--blanco-cristal);
+  border-top: 5px solid var(--rosa-magico);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Asegurar imágenes uniformes */
+.option {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  border: 4px solid rgba(255,255,255,0.2);
+}
+/* Efecto de partículas mejorado */
+.particles {
+  position: fixed;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  opacity: 0.5;
+  pointer-events: none;
+  filter: hue-rotate(90deg);
+}
+
+#app {
+  width: 95%;
+  max-width: 600px;
+  height: 85vh;
+  background: var(--blanco-cristal);
+  -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+  border-radius: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.1);
+}
+
+.screen {
+  display: none;
+  height: 100%;
+  padding: 1.5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.screen.active { display: flex; animation: fadeIn 1s ease-out; }
+
+h1, h2 { 
+  font-family: 'Playfair Display', serif; 
+  color: var(--dorado-hada);
+  text-shadow: 0 0 10px rgba(255, 239, 150, 0.5);
+}
+
+.options {
+  display: flex;
+  flex-direction: column; /* Por defecto para móvil */
+  gap: 15px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.option {
+  width: 100%;
+  height: 180px; /* Tamaño fijo uniforme */
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  cursor: pointer;
+  border: 3px solid rgba(255,255,255,0.3);
+  transition: 0.3s all ease;
+  overflow: hidden;
+}
+
+.option:hover {
+  transform: translateY(-5px);
+  border-color: var(--rosa-magico);
+  box-shadow: 0 0 20px var(--rosa-magico);
+}
+
+/* Desktop: Lado a lado */
+@media (min-width: 600px) {
+  .options { flex-direction: row; }
+  .option { height: 250px; }
+}
+
+.option span {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 15px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+button {
+  background: var(--verde-magico);
+  border: 1px solid var(--menta-suave);
+  padding: 1rem 2.5rem;
+  color: white;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+button:hover { background: var(--rosa-magico); transform: scale(1.1); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
