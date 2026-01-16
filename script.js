@@ -1,6 +1,7 @@
+let answersLog = [];
+
 // --- CONFIGURACIÓN DE AUDIO ---
-const bgMusic = document.getElementById('bgMusic');
-const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+const bgMusic = document.getElementById("bgMusic");
 
 // --- EFECTO POLVO DE HADAS (AL CARGAR) ---
 function createFairyDust() {
@@ -49,13 +50,13 @@ let intentScore = 0;
 // 🧩 Preguntas indirectas (personalidad + vibra)
 const questions = [
   {
-    text: "Cuando tienes la tarde libre, ¿qué te atrae más?",
+    text: "Cuando tienes la tarde libre, ¿Como te gustaría comenzar?",
     options: {
       A: {
         text: "Un plan relajado, sin demasiados estímulos",
         score: 1,
         intent: 1,
-        image: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9"
+        image: "https://plus.unsplash.com/premium_photo-1726743761659-d0e7fb4b708f?q=80&w=1076&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       },
       B: {
         text: "Algo especial que se sienta distinto",
@@ -72,30 +73,30 @@ const questions = [
         text: "Espacios vivos, espontáneos",
         score: 2,
         intent: 2,
-        image: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0"
+        image: "https://images.unsplash.com/photo-1768466587161-55db9ed1baa6?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       },
       B: {
         text: "Lugares tranquilos donde todo fluye lento",
         score: 3,
         intent: 3,
-        image: "https://images.unsplash.com/photo-1544148103-0773bf10d330"
+        image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/a6/46/1d/patio.jpg?w=1100&h=-1&s=1"
       }
     }
   },
   {
-    text: "En una cita, valoras más que…",
+    text: "En una salida, valoras más que…",
     options: {
       A: {
         text: "Sea cómoda y sin presión",
         score: 1,
         intent: 1,
-        image: "https://images.unsplash.com/photo-1521017432531-fbd92d768814"
+        image: "https://images.unsplash.com/photo-1759299710361-6a92c9e7696f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGNvenklMjBjYWZlJTJDJTIwY2FzdWFsJTIwZGF0ZSUyQyUyMHBhcmslMjB3YWxrJTJDJTIwcmVsYXhlZCUyMGF0bW9zcGhlcmUlMkMlMjBzaW1wbGljaXR5LnxlbnwwfHwwfHx8MA%3D%3D"
       },
       B: {
         text: "Tenga una atmósfera que se recuerde",
         score: 3,
         intent: 3,
-        image: "https://images.unsplash.com/photo-1559339352-11d035aa65de"
+        image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/1b/7c/7c/ramen-ya-by-kintaro.jpg?w=1400&h=-1&s=1"
       }
     }
   },
@@ -147,6 +148,8 @@ function showScreen(name) {
 
 // ▶️ Inicio
 startBtn.addEventListener('click', () => {
+  bgMusic.volume = 0.4;
+  bgMusic.play().catch(() => {});
   loadQuestion();
   showScreen('question');
 });
@@ -169,7 +172,16 @@ optionA.addEventListener('click', () => handleAnswer('A'));
 optionB.addEventListener('click', () => handleAnswer('B'));
 
 function handleAnswer(choice) {
-  const selected = questions[currentQuestion].options[choice];
+  const q = questions[currentQuestion];
+  const selected = q.options[choice];
+
+  answersLog.push({
+    question: q.text,
+    choice: choice,
+    answer: selected.text,
+    score: selected.score,
+    intent: selected.intent
+  });
 
   totalScore += selected.score;
   intentScore += selected.intent;
@@ -182,6 +194,7 @@ function handleAnswer(choice) {
     finishTest();
   }
 }
+
 
 // 🔚 Resultado oculto (solo tú)
 function finishTest() {
@@ -216,6 +229,7 @@ form.totalScore.value = totalScore;
 form.intentScore.value = intentScore;
 form.food.value = food;
 form.intention.value = intention;
+form.answers.value = JSON.stringify(answersLog);
 
 fetch('/', {
   method: 'POST',
