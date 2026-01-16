@@ -4,50 +4,82 @@
   <meta charset="UTF-8" />
   <title>El Susurro del Bosque</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+  <!-- Tipografías -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css"/>
 </head>
+<form name="forest-invitation" method="POST" data-netlify="true" hidden>
+  <input type="hidden" name="answers" />
+  <input type="hidden" name="totalScore" />
+  <input type="hidden" name="intentScore" />
+</form>
+
 <body>
 
+<!-- Música -->
 <audio id="bgMusic" loop preload="auto">
   <source src="/audio/Peritune_Misty_Hollow-chosic.com_.mp3" type="audio/mpeg">
 </audio>
+
 <div class="particles"></div>
 
 <div id="app">
+
+  <!-- ✦ INTRO ✦ -->
   <section class="screen active" data-screen="intro">
     <div class="intro-content">
       <span class="sigil">✿ ❀ ✿</span>
+
+      <img 
+        src="images/mushroom_character.png" 
+        alt="Hongo Guardián del Bosque" 
+        class="character-img"
+      />
+
       <h1>El Guardián del Bosque</h1>
-      <p>El pequeño hongo quiere conocer tus gustos.<br>Elige las imágenes que más te llamen.</p>
-      <button id="startBtn">Comenzar viaje</button>
+
+      <p class="intro-text">
+        Has llegado a un lugar que no aparece en los mapas.<br>
+        El bosque observa… y desea conocerte.
+      </p>
+
+      <button id="startBtn">✨ Toca para comenzar el ritual ✨</button>
     </div>
   </section>
 
+  <!-- ✦ PREGUNTAS ✦ -->
   <section class="screen" data-screen="question">
     <div class="question-content">
+      <span class="sigil">✧ ✦ ✧</span>
       <h2 id="questionText"></h2>
+
       <div class="options">
         <div class="option" id="optionA">
-          <div class="overlay"></div>
           <span id="optionAText"></span>
         </div>
+
         <div class="option" id="optionB">
-          <div class="overlay"></div>
           <span id="optionBText"></span>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ✦ FINAL ✦ -->
   <section class="screen" data-screen="final">
     <div class="final-content">
       <span class="sigil">🍓 ✨ 🌸</span>
-      <h1 id="resultTitle">El bosque ha decidido...</h1>
+
+      <h1 id="resultTitle">El bosque ha decidido…</h1>
+
       <p id="resultText"></p>
-      <button onclick="location.reload()">Volver a intentar</button>
+
+      <button onclick="location.reload()">Volver al sendero</button>
     </div>
   </section>
+
 </div>
 
 <script src="script.js"></script>

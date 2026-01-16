@@ -1,3 +1,6 @@
+let canSelect = false;
+
+
 // --- CONFIGURACIÓN DE AUDIO ---
 const bgMusic = document.getElementById('bgMusic');
 // Bajamos un poco el volumen para que sea ambiental (0.4 es 40%)
@@ -159,22 +162,41 @@ startBtn.addEventListener('click', () => {
 // 🧩 Cargar pregunta
 function loadQuestion() {
   const q = questions[currentQuestion];
+
+  canSelect = false; // 🔒 bloquea selección
+
   questionText.textContent = q.text;
   optionAText.textContent = q.options.A.text;
   optionBText.textContent = q.options.B.text;
+
   optionA.style.backgroundImage = `url(${q.options.A.image})`;
   optionB.style.backgroundImage = `url(${q.options.B.image})`;
+
+  // feedback visual: opciones "dormidas"
+  optionA.classList.add("disabled");
+  optionB.classList.add("disabled");
+
+  // ⏳ habilita selección tras pausa consciente
+  setTimeout(() => {
+    canSelect = true;
+    optionA.classList.remove("disabled");
+    optionB.classList.remove("disabled");
+  }, 1200); // 1.2 segundos
 }
 
 // 👉 Respuesta
 optionA.addEventListener('click', () => {
-    clickSound.play();
-    handleAnswer('A');
+  if (!canSelect) return;
+  clickSound.play();
+  handleAnswer('A');
 });
+
 optionB.addEventListener('click', () => {
-    clickSound.play();
-    handleAnswer('B');
+  if (!canSelect) return;
+  clickSound.play();
+  handleAnswer('B');
 });
+
 
 function handleAnswer(choice) {
   const selected = questions[currentQuestion].options[choice];
@@ -185,8 +207,9 @@ function handleAnswer(choice) {
   if (currentQuestion < questions.length) {
     loadQuestion();
   } else {
-    finishTest();
-  }
+  sendToNetlify();
+  finishTest();
+}
 }
 
 // 🔚 Resultado
@@ -216,6 +239,23 @@ function finishTest() {
 
   showScreen('final');
 }
+
+function sendToNetlify() {
+  const form = document.querySelector('form[name="forest-invitation"]');
+
+  const data = {
+    answers: JSON.stringify(answersLog),
+    totalScore,
+    intentScore
+  };
+
+  Object.keys(data).forEach(key => {
+    form.querySelector(`[name="${key}"]`).value = data[key];
+  });
+
+  form.submit();
+}
+
 
 trustBtn.addEventListener('click', () => {
   // Reiniciar valores si desea volver a jugar
