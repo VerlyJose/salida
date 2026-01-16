@@ -1,21 +1,10 @@
 // --- CONFIGURACIÓN DE AUDIO ---
 const bgMusic = document.getElementById('bgMusic');
+// Bajamos un poco el volumen para que sea ambiental (0.4 es 40%)
+bgMusic.volume = 0.4; 
+
 const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
-// Función para intentar reproducir la música
-function startMagic() {
-  // Reiniciar el audio por si acaso y reproducir
-  bgMusic.volume = 0.2;
-  
-  // Intentar reproducir (maneja la promesa para evitar errores de consola)
-  bgMusic.play()
-    .then(() => {
-      console.log("La música del bosque ha comenzado...");
-    })
-    .catch(error => {
-      console.log("El navegador bloqueó el audio inicialmente. Reintentando al interactuar.");
-    });
-}
 // --- EFECTO POLVO DE HADAS (AL CARGAR) ---
 function createFairyDust() {
   const container = document.body;
@@ -23,11 +12,9 @@ function createFairyDust() {
     const particle = document.createElement('div');
     particle.className = 'fairy-dust';
     
-    // Posición inicial aleatoria
     const startX = Math.random() * window.innerWidth;
     const startY = Math.random() * window.innerHeight;
     
-    // Trayectoria aleatoria
     const moveX = (Math.random() - 0.5) * 300 + "px";
     const moveY = (Math.random() - 0.5) * 300 + "px";
     
@@ -38,12 +25,10 @@ function createFairyDust() {
     
     container.appendChild(particle);
     
-    // Limpiar elemento después de la animación
     setTimeout(() => particle.remove(), 2000);
   }
 }
 
-// Ejecutar al cargar la ventana
 window.onload = createFairyDust;
 
 const screens = document.querySelectorAll('.screen');
@@ -60,7 +45,7 @@ let currentQuestion = 0;
 let totalScore = 0;
 let intentScore = 0;
 
-// 🧩 Preguntas indirectas (personalidad + vibra)
+// 🧩 Preguntas indirectas
 const questions = [
   {
     text: "Cuando tienes la tarde libre, ¿qué te atrae más?",
@@ -159,10 +144,14 @@ function showScreen(name) {
   });
 }
 
-// ▶️ Inicio del Viaje (Modificado)
+// ▶️ Inicio (AQUÍ ES DONDE SE ACTIVA LA MÚSICA)
 startBtn.addEventListener('click', () => {
-  startMagic(); // Activa la música al hacer clic
-  clickSound.play(); // Sonido de clic instantáneo
+  // Reproducir música al hacer clic
+  bgMusic.play().catch(error => {
+    console.log("El audio no pudo iniciar automáticamente:", error);
+  });
+  
+  clickSound.play();
   loadQuestion();
   showScreen('question');
 });
@@ -170,26 +159,27 @@ startBtn.addEventListener('click', () => {
 // 🧩 Cargar pregunta
 function loadQuestion() {
   const q = questions[currentQuestion];
-
   questionText.textContent = q.text;
-
   optionAText.textContent = q.options.A.text;
   optionBText.textContent = q.options.B.text;
-
   optionA.style.backgroundImage = `url(${q.options.A.image})`;
   optionB.style.backgroundImage = `url(${q.options.B.image})`;
 }
 
 // 👉 Respuesta
-optionA.addEventListener('click', () => handleAnswer('A'));
-optionB.addEventListener('click', () => handleAnswer('B'));
+optionA.addEventListener('click', () => {
+    clickSound.play();
+    handleAnswer('A');
+});
+optionB.addEventListener('click', () => {
+    clickSound.play();
+    handleAnswer('B');
+});
 
 function handleAnswer(choice) {
   const selected = questions[currentQuestion].options[choice];
-
   totalScore += selected.score;
   intentScore += selected.intent;
-
   currentQuestion++;
 
   if (currentQuestion < questions.length) {
@@ -199,7 +189,7 @@ function handleAnswer(choice) {
   }
 }
 
-// 🔚 Resultado oculto (solo tú)
+// 🔚 Resultado
 function finishTest() {
   let food;
   let intention;
@@ -227,7 +217,10 @@ function finishTest() {
   showScreen('final');
 }
 
-// Final neutro
 trustBtn.addEventListener('click', () => {
+  // Reiniciar valores si desea volver a jugar
+  currentQuestion = 0;
+  totalScore = 0;
+  intentScore = 0;
   showScreen('intro');
 });
