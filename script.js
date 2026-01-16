@@ -2,6 +2,20 @@
 const bgMusic = document.getElementById('bgMusic');
 const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
+// Función para intentar reproducir la música
+function startMagic() {
+  // Reiniciar el audio por si acaso y reproducir
+  bgMusic.volume = 0.2;
+  
+  // Intentar reproducir (maneja la promesa para evitar errores de consola)
+  bgMusic.play()
+    .then(() => {
+      console.log("La música del bosque ha comenzado...");
+    })
+    .catch(error => {
+      console.log("El navegador bloqueó el audio inicialmente. Reintentando al interactuar.");
+    });
+}
 // --- EFECTO POLVO DE HADAS (AL CARGAR) ---
 function createFairyDust() {
   const container = document.body;
@@ -145,8 +159,10 @@ function showScreen(name) {
   });
 }
 
-// ▶️ Inicio
+// ▶️ Inicio del Viaje (Modificado)
 startBtn.addEventListener('click', () => {
+  startMagic(); // Activa la música al hacer clic
+  clickSound.play(); // Sonido de clic instantáneo
   loadQuestion();
   showScreen('question');
 });
