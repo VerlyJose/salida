@@ -1,11 +1,5 @@
-let canSelect = false;
-
-
 // --- CONFIGURACIÓN DE AUDIO ---
 const bgMusic = document.getElementById('bgMusic');
-// Bajamos un poco el volumen para que sea ambiental (0.4 es 40%)
-bgMusic.volume = 0.4; 
-
 const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
 
 // --- EFECTO POLVO DE HADAS (AL CARGAR) ---
@@ -15,9 +9,11 @@ function createFairyDust() {
     const particle = document.createElement('div');
     particle.className = 'fairy-dust';
     
+    // Posición inicial aleatoria
     const startX = Math.random() * window.innerWidth;
     const startY = Math.random() * window.innerHeight;
     
+    // Trayectoria aleatoria
     const moveX = (Math.random() - 0.5) * 300 + "px";
     const moveY = (Math.random() - 0.5) * 300 + "px";
     
@@ -28,10 +24,12 @@ function createFairyDust() {
     
     container.appendChild(particle);
     
+    // Limpiar elemento después de la animación
     setTimeout(() => particle.remove(), 2000);
   }
 }
 
+// Ejecutar al cargar la ventana
 window.onload = createFairyDust;
 
 const screens = document.querySelectorAll('.screen');
@@ -48,7 +46,7 @@ let currentQuestion = 0;
 let totalScore = 0;
 let intentScore = 0;
 
-// 🧩 Preguntas indirectas
+// 🧩 Preguntas indirectas (personalidad + vibra)
 const questions = [
   {
     text: "Cuando tienes la tarde libre, ¿qué te atrae más?",
@@ -147,14 +145,8 @@ function showScreen(name) {
   });
 }
 
-// ▶️ Inicio (AQUÍ ES DONDE SE ACTIVA LA MÚSICA)
+// ▶️ Inicio
 startBtn.addEventListener('click', () => {
-  // Reproducir música al hacer clic
-  bgMusic.play().catch(error => {
-    console.log("El audio no pudo iniciar automáticamente:", error);
-  });
-  
-  clickSound.play();
   loadQuestion();
   showScreen('question');
 });
@@ -163,56 +155,35 @@ startBtn.addEventListener('click', () => {
 function loadQuestion() {
   const q = questions[currentQuestion];
 
-  canSelect = false; // 🔒 bloquea selección
-
   questionText.textContent = q.text;
+
   optionAText.textContent = q.options.A.text;
   optionBText.textContent = q.options.B.text;
 
   optionA.style.backgroundImage = `url(${q.options.A.image})`;
   optionB.style.backgroundImage = `url(${q.options.B.image})`;
-
-  // feedback visual: opciones "dormidas"
-  optionA.classList.add("disabled");
-  optionB.classList.add("disabled");
-
-  // ⏳ habilita selección tras pausa consciente
-  setTimeout(() => {
-    canSelect = true;
-    optionA.classList.remove("disabled");
-    optionB.classList.remove("disabled");
-  }, 1200); // 1.2 segundos
 }
 
 // 👉 Respuesta
-optionA.addEventListener('click', () => {
-  if (!canSelect) return;
-  clickSound.play();
-  handleAnswer('A');
-});
-
-optionB.addEventListener('click', () => {
-  if (!canSelect) return;
-  clickSound.play();
-  handleAnswer('B');
-});
-
+optionA.addEventListener('click', () => handleAnswer('A'));
+optionB.addEventListener('click', () => handleAnswer('B'));
 
 function handleAnswer(choice) {
   const selected = questions[currentQuestion].options[choice];
+
   totalScore += selected.score;
   intentScore += selected.intent;
+
   currentQuestion++;
 
   if (currentQuestion < questions.length) {
     loadQuestion();
   } else {
-  sendToNetlify();
-  finishTest();
-}
+    finishTest();
+  }
 }
 
-// 🔚 Resultado
+// 🔚 Resultado oculto (solo tú)
 function finishTest() {
   let food;
   let intention;
@@ -238,29 +209,23 @@ function finishTest() {
   console.log("🕰️ INTENCIÓN:", intention);
 
   showScreen('final');
+
+  const form = document.querySelector('form[name="ritual"]');
+
+form.totalScore.value = totalScore;
+form.intentScore.value = intentScore;
+form.food.value = food;
+form.intention.value = intention;
+
+fetch('/', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams(new FormData(form)).toString(),
+});
+
 }
 
-function sendToNetlify() {
-  const form = document.querySelector('form[name="forest-invitation"]');
-
-  const data = {
-    answers: JSON.stringify(answersLog),
-    totalScore,
-    intentScore
-  };
-
-  Object.keys(data).forEach(key => {
-    form.querySelector(`[name="${key}"]`).value = data[key];
-  });
-
-  form.submit();
-}
-
-
+// Final neutro
 trustBtn.addEventListener('click', () => {
-  // Reiniciar valores si desea volver a jugar
-  currentQuestion = 0;
-  totalScore = 0;
-  intentScore = 0;
   showScreen('intro');
 });

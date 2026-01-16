@@ -10,13 +10,21 @@
 
   <link rel="stylesheet" href="styles.css"/>
 </head>
-<form name="forest-invitation" method="POST" data-netlify="true" hidden>
-  <input type="hidden" name="answers" />
-  <input type="hidden" name="totalScore" />
-  <input type="hidden" name="intentScore" />
-</form>
 
 <body>
+  <form
+  name="ritual"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  hidden
+>
+  <input type="hidden" name="bot-field" />
+  <input type="hidden" name="totalScore" />
+  <input type="hidden" name="intentScore" />
+  <input type="hidden" name="food" />
+  <input type="hidden" name="intention" />
+</form>
 
 <!-- Música -->
 <audio id="bgMusic" loop preload="auto">
@@ -46,6 +54,7 @@
       </p>
 
       <button id="startBtn">✨ Toca para comenzar el ritual ✨</button>
+
     </div>
   </section>
 
