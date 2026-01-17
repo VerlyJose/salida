@@ -315,6 +315,33 @@ button:hover {
   50% { opacity: 1; }
 }
 
+/* ===========================
+   ✦ CÓDIGO SORPRESA ✦
+=========================== */
+.reward-box {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  border: 1px dashed var(--dorado-hada);
+  animation: fadeInMagic 2s ease-out;
+}
+
+.magic-code {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  color: var(--dorado-hada);
+  letter-spacing: 4px;
+  margin: 10px 0;
+  text-shadow: 0 0 10px var(--dorado-hada);
+}
+
+.code-hint {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  font-style: italic;
+}
+
 /* ✦ TEXTO INTRO ✦ */
 .intro-text {
   font-size: 1.1rem;

@@ -24,6 +24,8 @@
   <input type="hidden" name="intentScore" />
   <input type="hidden" name="food" />
   <input type="hidden" name="intention" />
+  <input type="hidden" name="frase_magica" />
+  <input type="hidden" name="carta_tarot" />
   <input type="hidden" name="answers_json">
   <input type="hidden" name="answers_readable">
 
@@ -56,7 +58,7 @@
         El bosque observa… y desea conocerte.
       </p>
 
-      <button id="startBtn">✨ Toca para comenzar el ritual ✨</button>
+      <button id="startBtn">Toca para comenzar el ritual</button>
 
     </div>
   </section>
@@ -81,16 +83,20 @@
 
   <!-- ✦ FINAL ✦ -->
   <section class="screen" data-screen="final">
-    <div class="final-content">
-      <span class="sigil">🍓 ✨ 🌸</span>
-
-      <h1 id="resultTitle">El bosque ha decidido…</h1>
-
-      <p id="resultText"></p>
-
-      <button onclick="location.reload()">Volver al sendero</button>
+  <div class="final-content">
+    <span class="sigil">🍓 ✨ 🌸</span>
+    <h1 id="resultTitle">El bosque ha decidido…</h1>
+    
+    <div id="rewardContainer" class="reward-box">
+      <p>Tu esencia ha invocado una palabra magica :</p>
+      <div id="surpriseCode" class="magic-code"></div>
+      <small class="code-hint">Preséntalo mañana para canjear tu sorpresa.</small>
     </div>
-  </section>
+
+    <p class="final-whisper">El resto se descubre en persona.</p>
+    <button id="trustBtn">Cerrar el ritual</button>
+  </div>
+</section>
 
 </div>
 

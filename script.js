@@ -107,30 +107,29 @@ const questions = [
         text: "Algo sencillo que se sienta cercano",
         score: 2,
         intent: 2,
-        image: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759"
+        image: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxmIYqiiyS4JAMK34c2vcgZbviyXvfJaq8ahZi2IPXdsRwFt9qzXy89d9ImXQTipHq0pE0M6aXkv8njoTO1TGiAugHNFj0VF2ILrwYQMYJEl3jqH7C7hP-9SxouQcVX7lNj_zhQrA=s1360-w1360-h1020-rw"
       },
       B: {
         text: "Un lugar con detalles y cierta magia",
         score: 3,
         intent: 3,
-        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
-      }
+        image: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSwQ37KuLxs-gOEMSFmE8py0ltnv0nG2bLPQnPYRW_mmxyMUIecXiaWOwMTn-cFF_VW1f0GT7NKboS-nns1oa-8w7yFVKb778Kx8BZ3pZ_DQY-V7y1wfNVrgTdBphkPgqxBlvfc0xQ=s1360-w1360-h1020-rw"}
     }
   },
   {
-    text: "Si el plan se extiende, es porque…",
+    text: "Y finalmente, prefieres...",
     options: {
       A: {
-        text: "La charla se puso buena sin planearlo",
+        text: "Algo conocido pero diferente",
         score: 2,
         intent: 2,
-        image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
+        image: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxZIAEQTSyKdoEKlzHbjklwpl_ZtXBIX0M30E8a0PAmNAQihZlcCtvRcEgRDl8_Z2LXPS3CsgK78kjxX63yqTfKcU_DN3F_HwUPBz8fkNxCK50kAJ-e8M-B97J2p2z9DlD29A7OhA=s1360-w1360-h1020-rw"
       },
       B: {
-        text: "Desde el inicio se sentía especial",
+        text: "Algo fresco y fuera de lo común",
         score: 3,
         intent: 3,
-        image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1"
+        image: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSwiZkvqp7f9xYUgoJiRoCBsHwgOaBbTkGMnCuVriOq0YPqCSJNuAcjY9O8Ah4mfp4P2KYJmSk3PpVSgkfoxpkdAvxsCOQSk1757wL8haEVRGr-TK4FNDC9utUyYD0aYGAiBehIQdtbKx87f=s1360-w1360-h1020-rw"
       }
     }
   }
@@ -195,53 +194,98 @@ function handleAnswer(choice) {
   }
 }
 
-
-// 🔚 Resultado oculto (solo tú)
 function finishTest() {
   let food;
   let intention;
+  let finalMessageText = "";
 
-  if (totalScore <= 8) {
-    food = "Mexicana 🌮";
-  } else if (totalScore <= 11) {
-    food = "Italiana 🍝";
-  } else {
-    food = "Sushi 🍣";
-  }
+  // 1. Determinar comida
+  const lastAnswer = answersLog[answersLog.length - 1];
+  food = lastAnswer.choice === 'A' ? "Mexicana vegana 🌮🌱" : "Sushi 🍣";
 
+  // 2. Determinar intención
   if (intentScore <= 7) {
     intention = "Plan relajado / corto";
+    finalMessageText = "Todo apunta a una tarde tranquila, sin prisas. Un plan que se siente ligero, donde lo importante es estar, no correr.";
   } else if (intentScore <= 11) {
     intention = "Plan progresivo";
+    finalMessageText = "La vibra dice que el plan puede crecer poco a poco. Empezar simple… y ver hasta dónde llega la tarde.";
   } else {
     intention = "Plan largo / íntimo";
+    finalMessageText = "Esto se siente como una tarde que no tiene prisa por terminar. De esas que se alargan porque nadie quiere irse.";
   }
 
-  console.log("🔢 PUNTAJE TOTAL:", totalScore);
-  console.log("🍽️ COMIDA IDEAL:", food);
-  console.log("🕰️ INTENCIÓN:", intention);
+  // 3. Selección Aleatoria de Palabra Mágica
+  const palabras = ["Arcana Lumis", "Aeterna Vox", "Ignis Verum", "Umbra Nox", "Vitae Anima"];
+  const fraseElegida = palabras[Math.floor(Math.random() * palabras.length)];
+
+  // 4. Selección Aleatoria de Carta del Tarot (Imagen + Nombre)
+  // Asegúrate de tener estas imágenes en tu carpeta /images/tarot/
+  const mazoTarot = [
+    { nombre: "La Estrella", img: "images/tarot/estrella.jpg" },
+    { nombre: "El Mundo", img: "images/tarot/mundo.jpg" },
+    { nombre: "Los Enamorados", img: "images/tarot/enamorados.jpg" },
+    { nombre: "El Mago", img: "images/tarot/mago.jpg" },
+    { nombre: "La Luna", img: "images/tarot/luna.jpg" }
+  ];
+  const cartaElegida = mazoTarot[Math.floor(Math.random() * mazoTarot.length)];
+
+  // 5. Actualizar la Interfaz (HTML)
+  const surpriseCode = document.getElementById("surpriseCode");
+  if (surpriseCode) {
+    surpriseCode.textContent = fraseElegida;
+  }
+
+  const tarotImg = document.getElementById("tarotImg");
+  if (tarotImg) {
+    tarotImg.src = cartaElegida.img;
+    tarotImg.alt = cartaElegida.nombre;
+  }
 
   showScreen('final');
 
+  const finalMessage = document.getElementById("finalMessage");
+  if (finalMessage) finalMessage.textContent = finalMessageText;
+
+  // 6. ENVIAR A NETLIFY (Aquí se guarda todo)
   const form = document.querySelector('form[name="ritual"]');
+  
+  // Asignar valores a los campos ocultos
+  form.totalScore.value = totalScore;
+  form.intentScore.value = intentScore;
+  form.food.value = food;
+  form.intention.value = intention;
 
-form.totalScore.value = totalScore;
-form.intentScore.value = intentScore;
-form.food.value = food;
-form.intention.value = intention;
-form.answers_json.value = JSON.stringify(answersLog);
-form.answers_readable.value = answersLog
-  .map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`)
-  .join('\n');
+  // Creamos o actualizamos inputs para la palabra y la carta
+  let extraData = {
+    frase_magica: fraseElegida,
+    carta_tarot: cartaElegida.nombre
+  };
 
-fetch('/', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  body: new URLSearchParams(new FormData(form)).toString(),
-});
+  form.answers_json.value = JSON.stringify({
+    respuestas: answersLog,
+    invocacion: extraData
+  });
 
+  form.answers_readable.value = answersLog
+    .map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`)
+    .join('\n') + `\n\nFRASE: ${fraseElegida}\nCARTA: ${cartaElegida.nombre}`;
+
+  // Enviar el formulario por Fetch
+  const formData = new FormData(form);
+  
+  // Agregamos manualmente la frase y la carta al FormData para Netlify
+  formData.append('frase_magica', fraseElegida);
+  formData.append('carta_tarot', cartaElegida.nombre);
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(formData).toString(),
+  })
+  .then(() => console.log('Ritual guardado en Netlify'))
+  .catch((error) => console.error('Error al guardar:', error));
 }
-
 // Final neutro
 trustBtn.addEventListener('click', () => {
   showScreen('intro');
