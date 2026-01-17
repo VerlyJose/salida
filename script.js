@@ -205,86 +205,61 @@ function finishTest() {
 
   // 2. Determinar intención
   if (intentScore <= 7) {
-    intention = "Plan relajado / corto";
-    finalMessageText = "Todo apunta a una tarde tranquila, sin prisas. Un plan que se siente ligero, donde lo importante es estar, no correr.";
+    intention = "Plan relajado";
+    finalMessageText = "Todo apunta a una tarde tranquila, sin prisas. Un plan que se siente ligero.";
   } else if (intentScore <= 11) {
     intention = "Plan progresivo";
-    finalMessageText = "La vibra dice que el plan puede crecer poco a poco. Empezar simple… y ver hasta dónde llega la tarde.";
+    finalMessageText = "La vibra dice que el plan puede crecer poco a poco. Empezar simple...";
   } else {
-    intention = "Plan largo / íntimo";
-    finalMessageText = "Esto se siente como una tarde que no tiene prisa por terminar. De esas que se alargan porque nadie quiere irse.";
+    intention = "Plan largo";
+    finalMessageText = "Esto se siente como una tarde que no tiene prisa por terminar. De esas que se alargan.";
   }
 
-  // 3. Selección Aleatoria de Palabra Mágica
-  const palabras = ["Arcana Lumis", "Aeterna Vox", "Ignis Verum", "Umbra Nox", "Vitae Anima"];
-  const fraseElegida = palabras[Math.floor(Math.random() * palabras.length)];
-
-  // 4. Selección Aleatoria de Carta del Tarot (Imagen + Nombre)
-  // Asegúrate de tener estas imágenes en tu carpeta /images/tarot/
-  const mazoTarot = [
-    { nombre: "La Estrella", img: "images/tarot/estrella.jpg" },
-    { nombre: "El Mundo", img: "images/tarot/mundo.jpg" },
-    { nombre: "Los Enamorados", img: "images/tarot/enamorados.jpg" },
-    { nombre: "El Mago", img: "images/tarot/mago.jpg" },
-    { nombre: "La Luna", img: "images/tarot/luna.jpg" }
+  // 3. SELECCIÓN ALEATORIA DE LA FRASE
+  const frases = [
+    "Arcana Lumis",
+    "Aeterna Vox",
+    "Ignis Verum",
+    "Umbra Nox",
+    "Vitae Anima"
   ];
-  const cartaElegida = mazoTarot[Math.floor(Math.random() * mazoTarot.length)];
+  const fraseElegida = frases[Math.floor(Math.random() * frases.length)];
 
-  // 5. Actualizar la Interfaz (HTML)
+  // 4. ACTUALIZAR INTERFAZ
   const surpriseCode = document.getElementById("surpriseCode");
   if (surpriseCode) {
     surpriseCode.textContent = fraseElegida;
   }
 
-  const tarotImg = document.getElementById("tarotImg");
-  if (tarotImg) {
-    tarotImg.src = cartaElegida.img;
-    tarotImg.alt = cartaElegida.nombre;
+  const finalMessage = document.getElementById("finalMessage");
+  if (finalMessage) {
+    finalMessage.textContent = finalMessageText;
   }
+
+  // ✨ --- AQUÍ APLICAMOS EL EFECTO AL FINALIZAR --- ✨
+  createFairyDust(); 
+  // Opcional: puedes llamarlo dos veces para que haya el doble de partículas
+  setTimeout(createFairyDust, 500); 
 
   showScreen('final');
 
-  const finalMessage = document.getElementById("finalMessage");
-  if (finalMessage) finalMessage.textContent = finalMessageText;
-
-  // 6. ENVIAR A NETLIFY (Aquí se guarda todo)
+  // 5. GUARDAR EN NETLIFY
   const form = document.querySelector('form[name="ritual"]');
-  
-  // Asignar valores a los campos ocultos
   form.totalScore.value = totalScore;
   form.intentScore.value = intentScore;
   form.food.value = food;
   form.intention.value = intention;
 
-  // Creamos o actualizamos inputs para la palabra y la carta
-  let extraData = {
-    frase_magica: fraseElegida,
-    carta_tarot: cartaElegida.nombre
-  };
-
-  form.answers_json.value = JSON.stringify({
-    respuestas: answersLog,
-    invocacion: extraData
-  });
-
   form.answers_readable.value = answersLog
     .map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`)
-    .join('\n') + `\n\nFRASE: ${fraseElegida}\nCARTA: ${cartaElegida.nombre}`;
+    .join('\n') + `\n\n✨ FRASE INVOCADA: ${fraseElegida}`;
 
-  // Enviar el formulario por Fetch
-  const formData = new FormData(form);
-  
-  // Agregamos manualmente la frase y la carta al FormData para Netlify
-  formData.append('frase_magica', fraseElegida);
-  formData.append('carta_tarot', cartaElegida.nombre);
-
+  // Enviar el formulario
   fetch('/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(formData).toString(),
-  })
-  .then(() => console.log('Ritual guardado en Netlify'))
-  .catch((error) => console.error('Error al guardar:', error));
+    body: new URLSearchParams(new FormData(form)).toString(),
+  });
 }
 // Final neutro
 trustBtn.addEventListener('click', () => {

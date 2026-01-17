@@ -24,8 +24,6 @@
   <input type="hidden" name="intentScore" />
   <input type="hidden" name="food" />
   <input type="hidden" name="intention" />
-  <input type="hidden" name="frase_magica" />
-  <input type="hidden" name="carta_tarot" />
   <input type="hidden" name="answers_json">
   <input type="hidden" name="answers_readable">
 
@@ -81,23 +79,21 @@
     </div>
   </section>
 
-  <!-- ✦ FINAL ✦ -->
-  <section class="screen" data-screen="final">
+<section class="screen" data-screen="final">
   <div class="final-content">
     <span class="sigil">🍓 ✨ 🌸</span>
     <h1 id="resultTitle">El bosque ha decidido…</h1>
     
     <div id="rewardContainer" class="reward-box">
-      <p>Tu esencia ha invocado una palabra magica :</p>
+      <p>Tu magia ha invocado una frase de poder:</p>
       <div id="surpriseCode" class="magic-code"></div>
-      <small class="code-hint">Preséntalo mañana para canjear tu sorpresa.</small>
+      <small class="code-hint">Otorgame estas palabras mañana para tu sorpresa.</small>
     </div>
 
-    <p class="final-whisper">El resto se descubre en persona.</p>
+    <p id="finalMessage" class="final-whisper"></p>
     <button id="trustBtn">Cerrar el ritual</button>
   </div>
 </section>
-
 </div>
 
 <script src="script.js"></script>
