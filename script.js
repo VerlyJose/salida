@@ -47,6 +47,20 @@ let currentQuestion = 0;
 let totalScore = 0;
 let intentScore = 0;
 
+
+startBtn.addEventListener('click', () => {
+  const nameInput = document.getElementById('playerName').value;
+  if (!nameInput) {
+    alert("El bosque necesita un nombre para reconocerte...");
+    return;
+  }
+  
+  bgMusic.volume = 0.4;
+  bgMusic.play().catch(() => {});
+  loadQuestion();
+  showScreen('question');
+});
+
 // 🧩 Preguntas indirectas (personalidad + vibra)
 const questions = [
   {
@@ -245,15 +259,17 @@ function finishTest() {
 
   // 5. GUARDAR EN NETLIFY
   const form = document.querySelector('form[name="ritual"]');
+  const nombreViajero = document.getElementById('playerName').value; // Capturamos el nombre
+
+  form.nombre_viajero.value = nombreViajero; // Lo guardamos en el form
   form.totalScore.value = totalScore;
   form.intentScore.value = intentScore;
   form.food.value = food;
   form.intention.value = intention;
 
-  form.answers_readable.value = answersLog
-    .map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`)
-    .join('\n') + `\n\n✨ FRASE INVOCADA: ${fraseElegida}`;
-
+  form.answers_readable.value = `VIAJERO: ${nombreViajero}\n` + 
+      answersLog.map((a, i) => `${i + 1}. ${a.question} → ${a.answer}`).join('\n') + 
+      `\n\n✨ FRASE INVOCADA: ${fraseElegida}`;
   // Enviar el formulario
   fetch('/', {
     method: 'POST',
